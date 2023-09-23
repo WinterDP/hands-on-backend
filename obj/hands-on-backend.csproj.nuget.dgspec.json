@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\jpdia\\Code_Workspace\\hands-on-backend\\hands-on-backend\\hands-on-backend.csproj": {}
+    "/home/lucas/Documents/GitHub/hands-on-backend/hands-on-backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\jpdia\\Code_Workspace\\hands-on-backend\\hands-on-backend\\hands-on-backend.csproj": {
+    "/home/lucas/Documents/GitHub/hands-on-backend/hands-on-backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\jpdia\\Code_Workspace\\hands-on-backend\\hands-on-backend\\hands-on-backend.csproj",
+        "projectUniqueName": "/home/lucas/Documents/GitHub/hands-on-backend/hands-on-backend.csproj",
         "projectName": "hands-on-backend",
-        "projectPath": "C:\\Users\\jpdia\\Code_Workspace\\hands-on-backend\\hands-on-backend\\hands-on-backend.csproj",
-        "packagesPath": "C:\\Users\\jpdia\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\jpdia\\Code_Workspace\\hands-on-backend\\hands-on-backend\\obj\\",
+        "projectPath": "/home/lucas/Documents/GitHub/hands-on-backend/hands-on-backend.csproj",
+        "packagesPath": "/home/lucas/.nuget/packages/",
+        "outputPath": "/home/lucas/Documents/GitHub/hands-on-backend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\jpdia\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/lucas/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,6 +41,10 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[7.0.10, )"
+            },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[2.21.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -68,7 +70,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.400\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/7.0.111/RuntimeIdentifierGraph.json"
         }
       }
     }
