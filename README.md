@@ -9,21 +9,17 @@ You can see in full page [here](https://mermaid.live/view#pako:eNqtV21vGjkQ_iuWp
 title: Event-Logger ABAC
 ---
 classDiagram;
-    %% direction;
         User o-- Project;
         Project -- ProjectController;
         User -- ProjectController : uses if Owner;
         Validate -- ControllerEntry;
         User -- ControllerEntry : uses;
-        %% Manager o-- ObserverEntry;
-        %% ObserverEntry -- FactoryEntry;
         Entry -- FactoryEntry;
         ControllerEntry -- FactoryEntry;
         User -- UserController : uses;
         Report -- Validate;
         ProjectController -- Validate;
         UserController -- Validate;
-        %% User --o Project;
         Report --> Entry : access ;
         Project o-- Entry;
         User -- Report : uses if Owner;
@@ -35,9 +31,6 @@ classDiagram;
         +getEntry(whoIsQuering, EntryID) : Entry;
     };
     namespace Entries{;
-        %% class ObserverEntry{;
-        %%     +notify();
-        %% };
         class FactoryEntry{;
             +createEntry(description, whoIsMaking, whatAccount, files[]): String;
             +updateEntry(description, whoIsMaking, whatAccount, files[]): String;
@@ -110,8 +103,7 @@ classDiagram;
         +getProject(whoIsQuering, projectID);
         -validateUserPermission(whoIs);
         -securityCheck(name, address);
-    };
-%% note for ObserverEntry "this is a future email feature";
+    }
 ```  
 
 
