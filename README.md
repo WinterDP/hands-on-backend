@@ -8,101 +8,101 @@ You can see in full page [here](https://mermaid.live/view#pako:eNqtV21vGjkQ_iuWp
 ---
 title: Event-Logger ABAC
 ---
-classDiagram;
-        User o-- Project;
-        Project -- ProjectController;
-        User -- ProjectController : uses if Owner;
-        Validate -- ControllerEntry;
-        User -- ControllerEntry : uses;
-        Entry -- FactoryEntry;
-        ControllerEntry -- FactoryEntry;
-        User -- UserController : uses;
-        Report -- Validate;
-        ProjectController -- Validate;
-        UserController -- Validate;
-        Report --> Entry : access ;
-        Project o-- Entry;
-        User -- Report : uses if Owner;
-    class ControllerEntry["Entry Controller"]{;
-        <<Controller>>;
-        +postEntry(description, whoIsMaking, whatAccount, files[]) : String;
-        +putEntry(description, whoIsMaking, whatAccount, files[]) : String;
-        +deleteEntry(whoIsDeleting, whatAccount, EntryID) : String;
-        +getEntry(whoIsQuering, EntryID) : Entry;
-    };
-    namespace Entries{;
-        class FactoryEntry{;
-            +createEntry(description, whoIsMaking, whatAccount, files[]): String;
-            +updateEntry(description, whoIsMaking, whatAccount, files[]): String;
-            +deleteEntry(whoIsDeleting, whatAccount, EntryID): String;
-            +readEntry(whoIsQuering, EntryID): Entry;
-        };
-        class Entry{;
-            +Int ID;
-            +Date timestamp;
-            +String description;
-            +String Project;
-            +String Manager;
-            +String Worker;
-            +Boolean HasOwnerSeen;
-            +Boolean HasManagerSeen;
-            +String<> files;
-        };
-    };
-    namespace Validation{;
-    class Validate {;
-            +validation(whoIs, whatAccount) : Boolean;
-            +securityCheck(files[], description);
-        };
-    };
-    namespace GeneralUser{;
-        class Role {;
-            <<enumeration>>;
-            OWNER;
-            MANAGER;
-            WORKER;
-            ADMIN;
-        };
-        class User{;
-            +Int ID;
-            +String name;
-            +String Role;
-            +String photoPath;
-            +List~String~ projectsID;
-        };
-    };
-    class UserController{;
-        <<Controller>>;
-        +postUser(whoIsMaking, name, picture, Role);
-        +putUser(whoIsUpdating, whatAccount, name, picture, Role);
-        +deleteUser(whoIsDeleting, whatAccount);
-        +getUser(whoIsQuering, whatAccount);
-        -validation(whoIs, whatAccount);
-        -securityCheck(name, picture, Role);
-        };
-    class Report{;
-        <<Controller>>;
-        +getProjectReport(whoIs, project[], index);
-        +getWorkerReport(whoIs, whatAccount);
-    };
-    namespace Projects{;
-        class Project{;
-            +Int ID;
-            +Date start;
-            +String name;
-            +String address;
-            +List~String~ users;
-            +List~Entry~ Entry;
-        };
-    };
-    class ProjectController{;
-        <<Controller>>;
-        +postProject(whoIsMaking, name, address);
-        +putProject(whoIsUpdating, name, address);
-        +deleteProject(whoIsDeleting, projectID);
-        +getProject(whoIsQuering, projectID);
-        -validateUserPermission(whoIs);
-        -securityCheck(name, address);
+classDiagram
+        User o-- Project
+        Project -- ProjectController
+        User -- ProjectController : uses if Owner
+        Validate -- ControllerEntry
+        User -- ControllerEntry : uses
+        Entry -- FactoryEntry
+        ControllerEntry -- FactoryEntry
+        User -- UserController : uses
+        Report -- Validate
+        ProjectController -- Validate
+        UserController -- Validate
+        Report --> Entry : access 
+        Project o-- Entry
+        User -- Report : uses if Owner
+    class ControllerEntry["Entry Controller"]{
+        <<Controller>>
+        +postEntry(description, whoIsMaking, whatAccount, files[]) : String
+        +putEntry(description, whoIsMaking, whatAccount, files[]) : String
+        +deleteEntry(whoIsDeleting, whatAccount, EntryID) : String
+        +getEntry(whoIsQuering, EntryID) : Entry
+    }
+    namespace Entries{
+        class FactoryEntry{
+            +createEntry(description, whoIsMaking, whatAccount, files[]): String
+            +updateEntry(description, whoIsMaking, whatAccount, files[]): String
+            +deleteEntry(whoIsDeleting, whatAccount, EntryID): String
+            +readEntry(whoIsQuering, EntryID): Entry
+        }
+        class Entry{
+            +Int ID
+            +Date timestamp
+            +String description
+            +String Project
+            +String Manager
+            +String Worker
+            +Boolean HasOwnerSeen
+            +Boolean HasManagerSeen
+            +String<> files
+        }
+    }
+    namespace Validation{
+    class Validate {
+            +validation(whoIs, whatAccount) : Boolean
+            +securityCheck(files[], description)
+        }
+    }
+    namespace GeneralUser{
+        class Role {
+            <<enumeration>>
+            OWNER
+            MANAGER
+            WORKER
+            ADMIN
+        }
+        class User{
+            +Int ID
+            +String name
+            +String Role
+            +String photoPath
+            +List~String~ projectsID
+        }
+    }
+    class UserController{
+        <<Controller>>
+        +postUser(whoIsMaking, name, picture, Role)
+        +putUser(whoIsUpdating, whatAccount, name, picture, Role)
+        +deleteUser(whoIsDeleting, whatAccount)
+        +getUser(whoIsQuering, whatAccount)
+        -validation(whoIs, whatAccount)
+        -securityCheck(name, picture, Role)
+        }
+    class Report{
+        <<Controller>>
+        +getProjectReport(whoIs, project[], index)
+        +getWorkerReport(whoIs, whatAccount)
+    }
+    namespace Projects{
+        class Project{
+            +Int ID
+            +Date start
+            +String name
+            +String address
+            +List~String~ users
+            +List~Entry~ Entry
+        }
+    }
+    class ProjectController{
+        <<Controller>>
+        +postProject(whoIsMaking, name, address)
+        +putProject(whoIsUpdating, name, address)
+        +deleteProject(whoIsDeleting, projectID)
+        +getProject(whoIsQuering, projectID)
+        -validateUserPermission(whoIs)
+        -securityCheck(name, address)
     }
 ```  
 
