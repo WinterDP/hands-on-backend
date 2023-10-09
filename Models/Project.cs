@@ -2,11 +2,18 @@ using Entries.Model;
 
 namespace ProjectNS.Model;
 
-class Project
+public class Project
 {
-    public required String Name { get; set; }
-    public required String Address { get; set; }
-    public required DateTime Start { get; set; }
-    public required String[] Users { get; set; }
-    public required Entry[] Entries { get; set; }
+    public Project(string name, string address)
+    {
+        this.Name = name;
+        this.Address = address;
+
+        this.Start = DateTime.Now;
+    }
+    public String? Name { get; set; }
+    public String? Address { get; set; }
+    public DateTime? Start { get; set; }
+    public String[]? Users { get; set; }
+    public Entry[]? Entries { get; set; }
 }
