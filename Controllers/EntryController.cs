@@ -1,7 +1,5 @@
 using Entries.Model;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System;
 
 namespace entriesCL.Controllers
 {
@@ -13,12 +11,11 @@ namespace entriesCL.Controllers
         public ActionResult GetEntries()
         {
             DateTime now = DateTime.Now;
-            Entry newEntry = new("this is a boilerplate entry, it only exists to make the Controller!", "boilerplate Project", "boilerplate Manager", "boilerplate Worker")
-            {
-                TimeStamp = DateTime.Now,
-                HasManagerSeen = false,
-                HasOwnerSeen = false
-            };
+            Entry newEntry = new(
+                description: "this is a boilerplate entry, it only exists to make the Controller!",
+                project: "boilerplate Project",
+                manager: "boilerplate Manager",
+                worker: "boilerplate Worker");
 
             return Ok(newEntry);
         }

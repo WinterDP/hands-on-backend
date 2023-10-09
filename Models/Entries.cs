@@ -1,27 +1,25 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace Entries.Model;
 
-class Entry
+public class Entry
 {
-    private bool? hasManagerSeen;
-    private bool? hasOwnerSeen;
-    private DateTime? timeStamp;
-    [SetsRequiredMembers]
     public Entry(String description, String project, String manager, String worker)
     {
-        Description = description;
-        Project = project;
-        Manager = manager;
-        Worker = worker;
+        this.Description = description;
+        this.Project = project;
+        this.Manager = manager;
+        this.Worker = worker;
+
+        this.HasManagerSeen = false;
+        this.HasOwnerSeen = false;
+        this.TimeStamp = DateTime.Now;
     }
 
-    public DateTime? TimeStamp { get => timeStamp; set => timeStamp = DateTime.Now; }
-    public required String Description { get; set; }
-    public required String Project { get; set; }
-    public required String Manager { get; set; }
-    public required String Worker { get; set; }
-    public Boolean? HasOwnerSeen { get => hasOwnerSeen; set => hasOwnerSeen = false; }
-    public Boolean? HasManagerSeen { get => hasManagerSeen; set => hasManagerSeen = false; }
+    public DateTime? TimeStamp { get; set; }
+    public String? Description { get; set; }
+    public String? Project { get; set; }
+    public String? Manager { get; set; }
+    public String? Worker { get; set; }
+    public Boolean? HasOwnerSeen { get; set; }
+    public Boolean? HasManagerSeen { get; set; }
     public String[]? Files { get; set; }
 }

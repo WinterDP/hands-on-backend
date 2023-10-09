@@ -1,24 +1,33 @@
 namespace UserNS.Model;
 
-class User
+public enum Roles
 {
-    private String role = "Worker";
-    public required String Name { get; set; }
-    public required String Role
+    WORKER,
+    MANAGER,
+    OWNER,
+    ADMIN
+}
+
+public class User
+{
+    public User(string name, string role, string photoPath)
     {
-        get { return role; }
-        set
+        this.Name = name;
+        if (Enum.IsDefined(typeof(Roles), role.ToUpper()))
         {
-            if (value == "Worker" || value == "Manager" || value == "Owner" || value == "Admin")
-            {
-                role = value;
-            }
-            else
-            {
-                role = "Worker";
-            }
+            this.Role = role;
         }
+        else
+        {
+            // todo: return error on creating a new instance
+        }
+
+        this.Role = role;
+        this.PhotoPath = photoPath;
     }
+
+    public required String Name { get; set; }
+    public required String Role { get; set; }
     public required String PhotoPath { get; set; }
     public String[]? Project { get; set; }
 }
