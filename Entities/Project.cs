@@ -1,6 +1,4 @@
-using Entries.Model;
-
-namespace ProjectNS.Model;
+namespace EventsLogger.Entities;
 
 public class Project
 {

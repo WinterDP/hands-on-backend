@@ -1,23 +1,29 @@
-using Entries.Model;
+using EventsLogger;
+using EventsLogger.Dtos;
+using EventsLogger.Entities;
+using EventsLogger.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
-namespace entriesCL.Controllers
+namespace EventsLogger.Controllers
 {
     [ApiController]
-    [Route("api/entries")]
-    public class EntriesController : ControllerBase
+    [Route("api/entry")]
+    public class EntryController : ControllerBase
     {
-        [HttpGet]
-        public ActionResult GetEntries()
-        {
-            DateTime now = DateTime.Now;
-            Entry newEntry = new(
-                description: "this is a boilerplate entry, it only exists to make the Controller!",
-                project: "boilerplate Project",
-                manager: "boilerplate Manager",
-                worker: "boilerplate Worker");
+        private readonly InMemEntryRepository repository;
 
-            return Ok(newEntry);
+        public EntryController()
+        {
+            this.repository = new InMemEntryRepository();
+        }
+
+        // GET /entry/
+        [HttpGet]
+        public async Task<IEnumerable<EntryDto>> GetEntryAsync()
+        {
+            var entry = (await repository.GetEntryAsync())
+                        .Select(entry => entry.AsDto());
+            return entry;
         }
     }
 }
