@@ -1,4 +1,4 @@
-namespace UserNS.Model;
+namespace EventsLogger.Entities;
 
 public enum Roles
 {
