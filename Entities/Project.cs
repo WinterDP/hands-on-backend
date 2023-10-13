@@ -2,13 +2,7 @@ namespace EventsLogger.Entities;
 
 public class Project
 {
-    public Project(string name, string address)
-    {
-        this.Name = name;
-        this.Address = address;
-
-        this.Start = DateTime.Now;
-    }
+    public int Id { get; set; }
     public String? Name { get; set; }
     public String? Address { get; set; }
     public DateTime? Start { get; set; }

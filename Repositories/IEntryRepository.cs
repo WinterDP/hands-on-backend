@@ -4,10 +4,10 @@ namespace EventsLogger.Repositories
 {
     public interface IEntryRepository
     {
-        Task<Entry> GetEntryAsync(Guid id);
+        Task<Entry> GetEntryAsync(int id);
         Task<IEnumerable<Entry>> GetEntryAsync();
         Task CreateEntryAsync(Entry entry);
         Task UpdateEntryAsync(Entry entry);
-        Task DeleteEntryAsync(Guid id);
+        Task DeleteEntryAsync(int id);
     }
 }

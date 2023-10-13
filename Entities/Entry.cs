@@ -2,7 +2,7 @@ namespace EventsLogger.Entities;
 
 public class Entry
 {
-    public Guid Id { get; init; }
+    public int Id { get; set; }
     public DateTime CreatedDate { get; init; }
     public String? Description { get; init; }
     public String? Project { get; init; }

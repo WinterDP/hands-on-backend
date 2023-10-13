@@ -2,7 +2,7 @@ namespace EventsLogger.Dtos;
 
 public class EntryDto
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
     public DateTime CreatedDate { get; set; }
     public String? Description { get; set; }
     public String? Project { get; set; }

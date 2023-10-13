@@ -1,33 +1,16 @@
-namespace EventsLogger.Entities;
+using System.ComponentModel.DataAnnotations;
 
-public enum Roles
-{
-    WORKER,
-    MANAGER,
-    OWNER,
-    ADMIN
-}
+namespace EventsLogger.Entities;
 
 public class User
 {
-    public User(string name, string role, string photoPath)
-    {
-        this.Name = name;
-        if (Enum.IsDefined(typeof(Roles), role.ToUpper()))
-        {
-            this.Role = role;
-        }
-        else
-        {
-            // todo: return error on creating a new instance
-        }
-
-        this.Role = role;
-        this.PhotoPath = photoPath;
-    }
-
-    public required String Name { get; set; }
-    public required String Role { get; set; }
-    public required String PhotoPath { get; set; }
-    public String[]? Project { get; set; }
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    [EmailAddress]
+    [Required, MaxLength(120)]
+    public string? Email { get; set; }
+    [Required, MaxLength(10)]
+    public string? Role { get; set; }
+    public string? PhotoPath { get; set; }
+    public string[]? Project { get; set; }
 }
