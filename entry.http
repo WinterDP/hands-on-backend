@@ -1,0 +1,18 @@
+@baseUrl=  http://localhost:5212
+###
+GET {{baseUrl}}/entry
+
+###
+GET {{baseUrl}}/entry/198c4366-d6f4-4f1a-9b18-252e6670d1c9
+
+###
+POST {{baseUrl}}/entry
+content-type: application/json
+
+{
+    "Description" : "descrição teste",
+    "Project" : "Projeto 5",
+    "Manager" : "Manager 6",
+    "Worker" : "Worker 10",
+    "Files" : [""]
+}
