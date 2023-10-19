@@ -9,7 +9,7 @@ namespace EventsLogger.Repositories
         {
             new Entry
             {
-                // Id = int.Newint(),
+                Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
                 Description = "Finish the columns.",
                 Project = "Building 1",
@@ -21,7 +21,7 @@ namespace EventsLogger.Repositories
             },
             new Entry
             {
-                // Id = int.Newint(),
+                Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
                 Description = "Finish the Walls.",
                 Project = "Building 2",
@@ -33,7 +33,7 @@ namespace EventsLogger.Repositories
             },
             new Entry
             {
-                // Id = int.Newint(),
+                Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
                 Description = "Finish the Doors.",
                 Project = "Building 3",
@@ -44,13 +44,13 @@ namespace EventsLogger.Repositories
                 Files = null
             }
         };
-
+        
         public async Task<IEnumerable<Entry>> GetEntryAsync()
         {
             return await Task.FromResult(entrys);
         }
 
-        public async Task<Entry> GetEntryAsync(int id)
+        public async Task<Entry> GetEntryAsync(Guid id)
         {
             var entry = entrys.SingleOrDefault(entry => entry.Id == id)!;
             return await Task.FromResult(entry);
@@ -69,7 +69,7 @@ namespace EventsLogger.Repositories
             await Task.CompletedTask;
         }
 
-        public async Task DeleteEntryAsync(int id)
+        public async Task DeleteEntryAsync(Guid id)
         {
             var index = entrys.FindIndex(existingEntry => existingEntry.Id == id);
             entrys.RemoveAt(index);

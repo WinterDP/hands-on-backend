@@ -1,17 +1,15 @@
-using EventsLogger;
 using EventsLogger.Dtos;
-using EventsLogger.Entities;
 using EventsLogger.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventsLogger.Controllers
 {
     [ApiController]
-    [Route("api/entry")]
+    [Route("api/[controller]")]
     public class EntryController : ControllerBase
     {
         private readonly InMemEntryRepository repository;
-
+        
         public EntryController()
         {
             this.repository = new InMemEntryRepository();
