@@ -1,5 +1,5 @@
 using EventsLogger.Dtos;
-using EventsLogger.Repositories;
+using EventsLogger.Services.EntryServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventsLogger.Controllers
@@ -8,18 +8,18 @@ namespace EventsLogger.Controllers
     [Route("api/[controller]")]
     public class EntryController : ControllerBase
     {
-        private readonly InMemEntryRepository repository;
-        
+        private readonly InMemEntryService repository;
+
         public EntryController()
         {
-            this.repository = new InMemEntryRepository();
+            this.repository = new InMemEntryService();
         }
 
         // GET /entry/
         [HttpGet]
         public async Task<IEnumerable<EntryDto>> GetEntryAsync()
         {
-            var entry = (await repository.GetEntryAsync())
+            var entry = (await repository.GetEntriesAsync())
                         .Select(entry => entry.AsDto());
             return entry;
         }

@@ -1,13 +1,14 @@
+using EventsLogger.Dtos;
 using EventsLogger.Entities;
 
-namespace EventsLogger.Repositories
+namespace EventsLogger.Services.EntryServices
 {
 
-    public class InMemEntryRepository : IEntryRepository
+    public class InMemEntryService : IEntryService
     {
-        private readonly List<Entry> entrys = new()
+        private readonly List<EntryDto> entrys = new()
         {
-            new Entry
+            new EntryDto
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
@@ -19,7 +20,7 @@ namespace EventsLogger.Repositories
                 HasManagerSeen = false,
                 Files = null
             },
-            new Entry
+            new EntryDto
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
@@ -31,7 +32,7 @@ namespace EventsLogger.Repositories
                 HasManagerSeen = false,
                 Files = null
             },
-            new Entry
+            new EntryDto
             {
                 Id = Guid.NewGuid(),
                 CreatedDate = DateTime.Now,
@@ -44,25 +45,25 @@ namespace EventsLogger.Repositories
                 Files = null
             }
         };
-        
-        public async Task<IEnumerable<Entry>> GetEntryAsync()
+
+        public async Task<IEnumerable<EntryDto>> GetEntriesAsync()
         {
             return await Task.FromResult(entrys);
         }
 
-        public async Task<Entry> GetEntryAsync(Guid id)
+        public async Task<EntryDto> GetEntryAsync(Guid id)
         {
             var entry = entrys.SingleOrDefault(entry => entry.Id == id)!;
             return await Task.FromResult(entry);
         }
 
-        public async Task CreateEntryAsync(Entry entry)
+        public async Task CreateEntryAsync(CreateEntryDto entry)
         {
             entrys.Add(entry);
             await Task.CompletedTask;
         }
 
-        public async Task UpdateEntryAsync(Entry entry)
+        public async Task UpdateEntryAsync(UpdateEntryDto entry)
         {
             var index = entrys.FindIndex(existingEntry => existingEntry.Id == entry.Id);
             entrys[index] = entry;

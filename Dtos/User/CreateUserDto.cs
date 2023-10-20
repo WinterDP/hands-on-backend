@@ -3,17 +3,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace EventsLogger.Dtos;
 
-public class UserDto
+public class CreateUserDto
 {
-    public Guid Id { get; set; }
+    [Required]
     public string? Name { get; set; }
+    [Required]
     public string? Password { get; set; }
-
     [EmailAddress]
     [Required, MaxLength(120)]
     public string? Email { get; set; }
-    public UserRoles Role { get; set; } = UserRoles.worker;
-
+    [Required, MaxLength(10)]
+    public string? Role { get; set; }
+    [Required]
     public string? PhotoPath { get; set; }
-    public Project[]? Project { get; set; }
+    public Project[]? Projects { get; set; }
 }

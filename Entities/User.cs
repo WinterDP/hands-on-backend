@@ -10,10 +10,10 @@ public class User
     [EmailAddress]
     [Required, MaxLength(120)]
     public string? Email { get; set; }
-    [Required, MaxLength(10)]
+    [Required]
     public UserRoles Role { get; set; } = UserRoles.worker;
     public string? PhotoPath { get; set; }
-    public Project[]? Project { get; set; }
+    public Project[]? Projects { get; set; }
 
     public static implicit operator User(string v)
     {

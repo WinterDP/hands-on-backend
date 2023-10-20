@@ -8,7 +8,7 @@ public class AppDbContext : DbContext
 {
     protected readonly IConfiguration Configuration;
 
-    public AppDbContext(DbContextOptions<AppDbContext> options): base(options)
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
 
@@ -24,7 +24,7 @@ public class AppDbContext : DbContext
                 Name = "admin",
                 Password = "admin",
                 Email = "admin@admin.com",
-                Role = "admin",
+                Role = UserRoles.admin,
                 PhotoPath = "",
             });
     }
