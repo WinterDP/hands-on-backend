@@ -8,11 +8,11 @@ namespace EventsLogger.Controllers
     [Route("api/[controller]")]
     public class EntryController : ControllerBase
     {
-        private readonly InMemEntryService repository;
+        private readonly EntryService repository;
 
         public EntryController()
         {
-            this.repository = new InMemEntryService();
+            this.repository = new EntryService();
         }
 
         // GET /entry/

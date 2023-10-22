@@ -1,14 +1,13 @@
 using EventsLogger.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 namespace EventsLogger.Data;
 
-public class AppDbContext : DbContext
+public class UserContext : DbContext
 {
     protected readonly IConfiguration Configuration;
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+    public UserContext(DbContextOptions<UserContext> options) : base(options)
     {
     }
 
@@ -27,11 +26,6 @@ public class AppDbContext : DbContext
                 Role = UserRoles.admin,
                 PhotoPath = "",
             });
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-
     }
 
 }

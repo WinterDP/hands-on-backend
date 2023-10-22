@@ -1,29 +1,30 @@
 using AutoMapper;
+using EventsLogger.Data;
 using EventsLogger.Dtos;
 using EventsLogger.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventsLogger.Services.UserServices
 {
     public class UserService : IUserService
     {
-        private static List<User> users = new List<User>{
-            new User(),
-            new User { Name = "Lucas"}
-        };
         private readonly IMapper _mapper;
+        private readonly UserContext _context;
 
-        public UserService(IMapper mapper)
+        public UserService(IMapper mapper, UserContext context)
         {
+            _context = context;
             _mapper = mapper;
         }
 
         public async Task<ServiceResponse<IEnumerable<UserDto>>> CreateUserAsync(CreateUserDto newUser)
         {
             var serviceResponse = new ServiceResponse<IEnumerable<UserDto>>();
+            var dbUsers = await _context.Users.ToListAsync();
             var user = _mapper.Map<User>(newUser);
             user.Id = Guid.NewGuid();
-            users.Add(user);
-            serviceResponse.Data = users.Select(u => _mapper.Map<UserDto>(u)).ToList();
+            dbUsers.Add(user);
+            serviceResponse.Data = dbUsers.Select(u => _mapper.Map<UserDto>(u)).ToList();
             return serviceResponse;
         }
 
@@ -33,15 +34,16 @@ namespace EventsLogger.Services.UserServices
 
             try
             {
-                var user = users.First(u => u.Id == id);
+                var dbUsers = await _context.Users.ToListAsync();
+                var user = dbUsers.First(u => u.Id == id);
                 if (user is null)
                 {
                     throw new Exception($"User with Id '{id}' not found.");
                 }
 
-                users.Remove(user);
+                dbUsers.Remove(user);
 
-                serviceResponse.Data = users.Select(u => _mapper.Map<UserDto>(u)).ToList();
+                serviceResponse.Data = dbUsers.Select(u => _mapper.Map<UserDto>(u)).ToList();
 
             }
             catch (Exception ex)
@@ -55,7 +57,8 @@ namespace EventsLogger.Services.UserServices
         public async Task<ServiceResponse<UserDto>> GetUserAsync(Guid id)
         {
             var serviceResponse = new ServiceResponse<UserDto>();
-            var user = users.FirstOrDefault(u => u.Id == id);
+            var dbUsers = await _context.Users.ToListAsync();
+            var user = dbUsers.FirstOrDefault(u => u.Id == id);
             if (user is not null)
             {
                 serviceResponse.Data = _mapper.Map<UserDto>(user);
@@ -64,10 +67,11 @@ namespace EventsLogger.Services.UserServices
             throw new Exception("User not found");
         }
 
-        public async Task<ServiceResponse<IEnumerable<UserDto>>> GetUsersAsync()
+        public async Task<ServiceResponse<IEnumerable<UserDto>>> GetAllUsersAsync()
         {
             var serviceResponse = new ServiceResponse<IEnumerable<UserDto>>();
-            serviceResponse.Data = users.Select(u => _mapper.Map<UserDto>(u)).ToList();
+            var dbUsers = await _context.Users.ToListAsync();
+            serviceResponse.Data = dbUsers.Select(u => _mapper.Map<UserDto>(u)).ToList();
             return serviceResponse;
         }
 
@@ -76,7 +80,8 @@ namespace EventsLogger.Services.UserServices
             var serviceResponse = new ServiceResponse<UserDto>();
             try
             {
-                var user = users.FirstOrDefault(u => u.Id == updatedUser.Id);
+                var dbUsers = await _context.Users.ToListAsync();
+                var user = dbUsers.FirstOrDefault(u => u.Id == updatedUser.Id);
                 if (user is null)
                 {
                     throw new Exception($"User with Id '{updatedUser.Id}' not found.");

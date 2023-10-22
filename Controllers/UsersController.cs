@@ -22,7 +22,7 @@ namespace EventsLogger.Controllers
         [HttpGet("GetAll")]
         public async Task<ActionResult<ServiceResponse<IEnumerable<UserDto>>>> Get()
         {
-            return Ok(await _userService.GetUsersAsync());
+            return Ok(await _userService.GetAllUsersAsync());
         }
 
         [HttpGet("{id}")]

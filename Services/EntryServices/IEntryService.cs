@@ -5,10 +5,10 @@ namespace EventsLogger.Services.EntryServices
 {
     public interface IEntryService
     {
-        Task<EntryDto> GetEntryAsync(Guid id);
-        Task<IEnumerable<EntryDto>> GetEntriesAsync();
-        Task CreateEntryAsync(CreateUserDto entry);
-        Task UpdateEntryAsync(UpdateUserDto entry);
-        Task DeleteEntryAsync(Guid id);
+        public Task<ServiceResponse<EntryDto>> GetEntryAsync(Guid id);
+        public Task<ServiceResponse<IEnumerable<EntryDto>>> GetEntriesAsync();
+        public Task<ServiceResponse<EntryDto>> CreateEntryAsync(CreateUserDto entry);
+        public Task<ServiceResponse<EntryDto>> UpdateEntryAsync(UpdateUserDto entry);
+        public Task<ServiceResponse<EntryDto>> DeleteEntryAsync(Guid id);
     }
 }

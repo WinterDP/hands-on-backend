@@ -19,7 +19,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 
 /// connect database
 var connection = builder.Configuration.GetConnectionString("DefaultConnnection");
-builder.Services.AddDbContext<AppDbContext>(options =>
+builder.Services.AddDbContext<UserContext>(options =>
     options.UseNpgsql(connection));
 
 var app = builder.Build();
