@@ -5,7 +5,7 @@ namespace EventsLogger
 {
     public static class Extensions
     {
-        public static EntryDto AsDto(this Entry entry)
+        public static EntryDto AsDto(Entry entry)
         {
             return new EntryDto
             {

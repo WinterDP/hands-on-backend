@@ -5,6 +5,8 @@ namespace EventsLogger.Entities;
 public class User
 {
     public Guid Id { get; set; }
+    public DateTime CreatedDate { get; init; }
+    public DateTime UpdateDate { get; init; }
     public string? Name { get; set; }
     public string? Password { get; set; }
     [EmailAddress]

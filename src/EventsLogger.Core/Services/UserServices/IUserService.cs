@@ -5,10 +5,10 @@ namespace EventsLogger.Services.UserServices
 {
     public interface IUserService
     {
-        Task<ServiceResponse<UserDto>> GetUserAsync(Guid id);
-        Task<ServiceResponse<IEnumerable<UserDto>>> GetAllUsersAsync();
-        Task<ServiceResponse<IEnumerable<UserDto>>> CreateUserAsync(CreateUserDto newUser);
-        Task<ServiceResponse<UserDto>> UpdateUserAsync(UpdateUserDto updatedUser);
-        Task<ServiceResponse<IEnumerable<UserDto>>> DeleteUserAsync(Guid id);
+        public Task<UserDto> GetUserAsync(Guid id);
+        public Task<IEnumerable<UserDto>> GetAllUsersAsync();
+        public Task CreateUserAsync(CreateUserDto newUser);
+        public Task UpdateUserAsync(UpdateUserDto updatedUser);
+        public Task DeleteUserAsync(Guid id);
     }
 }

@@ -4,6 +4,7 @@ public class Entry
 {
     public Guid Id { get; set; }
     public DateTime CreatedDate { get; init; }
+    public DateTime UpdateDate { get; init; }
     public String? Description { get; init; }
     public Project? Project { get; init; }
     public User? Manager { get; init; }

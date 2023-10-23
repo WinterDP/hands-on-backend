@@ -18,33 +18,33 @@ namespace EventsLogger.Services.EntryServices
             _mapper = mapper;
         }
 
-        public async Task<ServiceResponse<EntryDto>> CreateEntryAsync(CreateUserDto entry)
+        public async Task<EntryDto> CreateEntryAsync(CreateUserDto entry)
         {
             entrys.Add(entry);
             return await Task.CompletedTask;
         }
 
-        public async Task<ServiceResponse<EntryDto>> DeleteEntryAsync(Guid id)
+        public async Task DeleteEntryAsync(Guid id)
         {
             var index = entrys.FindIndex(existingEntry => existingEntry.Id == id);
             entrys.RemoveAt(index);
             return await Task.CompletedTask;
         }
 
-        public async Task<ServiceResponse<IEnumerable<EntryDto>>> GetEntriesAsync()
+        public async Task<IEnumerable<EntryDto>> GetEntriesAsync()
         {
             var dbUsers = await _context.Users.ToListAsync();
             return await Task.FromResult(entrys);
 
         }
 
-        public async Task<ServiceResponse<EntryDto>> GetEntryAsync(Guid id)
+        public async Task<EntryDto> GetEntryAsync(Guid id)
         {
             var entry = entrys.SingleOrDefault(entry => entry.Id == id)!;
             return await Task.FromResult(entry);
         }
 
-        public async Task<ServiceResponse<EntryDto>> UpdateEntryAsync(UpdateUserDto entry)
+        public async Task UpdateEntryAsync(UpdateUserDto entry)
         {
             var index = entrys.FindIndex(existingEntry => existingEntry.Id == entry.Id);
             entrys[index] = entry;

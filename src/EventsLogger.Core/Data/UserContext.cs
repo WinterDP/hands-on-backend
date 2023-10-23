@@ -7,9 +7,7 @@ public class UserContext : DbContext
 {
     protected readonly IConfiguration Configuration;
 
-    public UserContext(DbContextOptions<UserContext> options) : base(options)
-    {
-    }
+    public UserContext(DbContextOptions<UserContext> options) : base(options){}
 
     public DbSet<User> Users { get; set; }
 
