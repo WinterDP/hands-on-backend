@@ -1,33 +1,34 @@
-namespace EventsLogger.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public enum Roles
-{
-    WORKER,
-    MANAGER,
-    OWNER,
-    ADMIN
-}
-
+<<<<<<< Updated upstream
 public class User
 {
-    public User(string name, string role, string photoPath)
-    {
-        this.Name = name;
-        if (Enum.IsDefined(typeof(Roles), role.ToUpper()))
-        {
-            this.Role = role;
-        }
-        else
-        {
-            // todo: return error on creating a new instance
-        }
-
-        this.Role = role;
-        this.PhotoPath = photoPath;
-    }
 
     public required String Name { get; set; }
     public required String Role { get; set; }
     public required String PhotoPath { get; set; }
     public String[]? Project { get; set; }
+=======
+namespace EventsLogger.Entities
+{
+    public class User
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
+        public required string Email { get; set; }
+        public required string Password { get; set; }
+        public string? Role { get; set; }
+        public required string PhotoPath { get; set; }
+        public DateOnly CreatedDate { get; set; }
+        public DateOnly UpdatedDate { get; set; }
+        [ForeignKey("Project")]
+        public Guid[]? ProjectIds { get; init; }
+        public Project[]? Project { get; init; }
+
+
+    }
+>>>>>>> Stashed changes
 }

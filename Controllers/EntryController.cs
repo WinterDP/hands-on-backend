@@ -1,98 +1,220 @@
-using EventsLogger;
-using EventsLogger.Dtos;
+using AutoMapper;
+using EventsLogger.Dto.Entry;
 using EventsLogger.Entities;
-using EventsLogger.Repositories;
+using EventsLogger.Repositories.IRepository;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace EventsLogger.Controllers
 {
+    //[Route("api/[controller]")]
+    [Route("api/Entry")]
     [ApiController]
-    [Route("entry")]
-    public class EntryController : ControllerBase
+    public class EntryAPIController : ControllerBase
     {
-        private readonly InMemEntryRepository repository;
+        private readonly APIResponse _response;
+        private readonly IEntryRepository _dbEntry;
+        private readonly IMapper _mapper;
 
-        public EntryController()
+        public EntryAPIController(IEntryRepository dbEntry, IMapper mapper)
         {
-            this.repository = new InMemEntryRepository();
+            _mapper = mapper;
+            _dbEntry = dbEntry;
+            _response = new();
         }
 
-        // GET /entry/
+
+
         [HttpGet]
-        public async Task<IEnumerable<EntryDto>> GetEntryAsync()
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<APIResponse>> GetEntries()
         {
-            var entry = (await repository.GetEntryAsync())
-                        .Select(entry => entry.AsDto());
-            return entry;
-        }
-        // GET /entry/{id}
-        [HttpGet("{id}")]
-        public async Task<ActionResult<EntryDto>> GetEntryAsync(Guid id)
-        {
-            var entry = await repository.GetEntryAsync(id);
-
-            if (entry is null)
+            try
             {
-                return NotFound();
+                IEnumerable<Entry> EntryList = await _dbEntry.GetAllAsync();
+                _response.Result = _mapper.Map<List<EntryDTO>>(EntryList);
+                _response.StatusCode = HttpStatusCode.OK;
+                return Ok(_response);
             }
-
-            return entry.AsDto();
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
         }
-        // POST /entry/
+
+
+
+        [HttpGet("{id:guid}", Name = "GetEntry")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> GetEntry(Guid id)
+        {
+            try
+            {
+                var Entry = await _dbEntry.GetAsync(u => u.Id == id);
+                if (Entry == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+                _response.StatusCode = HttpStatusCode.OK;
+                _response.Result = _mapper.Map<EntryDTO>(Entry);
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
+        }
+
+
         [HttpPost]
-        public async Task<ActionResult<EntryDto>> CreateEntryAsync(CreateEntryDto entryDto)
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> CreateEntry([FromBody] CreateEntryDTO createEntryDTO)
         {
-            Entry entry = new()
+            try
             {
-                Id = Guid.NewGuid(),
-                CreatedDate = DateTime.Now,
-                Description = entryDto.Description,
-                Project = entryDto.Project,
-                Manager = entryDto.Manager,
-                Worker = entryDto.Worker,
-                HasOwnerSeen = false,
-                HasManagerSeen = false,
-                Files = entryDto.Files
-            };
+                if (createEntryDTO == null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+                if (await _dbEntry.GetAsync(u => u.Id == createEntryDTO.WorkerId) != null)
+                {
+                    ModelState.AddModelError("CustomError", "User ID is Invalid!");
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.Result = ModelState;
+                    return BadRequest(_response);
+                }
+                if (await _dbEntry.GetAsync(u => u.Id == createEntryDTO.ProjectId) != null)
+                {
+                    ModelState.AddModelError("CustomError", "Project ID is Invalid!");
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.Result = ModelState;
+                    return BadRequest(_response);
+                }
+                Entry entry = _mapper.Map<Entry>(createEntryDTO);
 
-            await repository.CreateEntryAsync(entry);
+                await _dbEntry.CreateAsync(entry);
 
-            return CreatedAtAction(nameof(GetEntryAsync), new { id = entry.Id }, entry.AsDto());
-        }
-        // PUT /entry/{id}
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateEntryAsync(Guid id, UpdateEntryDto entryDto)
-        {
-            var existingEntry = await repository.GetEntryAsync(id);
-            if (existingEntry is null)
-            {
-                return NotFound();
+                _response.StatusCode = HttpStatusCode.Created;
+                _response.Result = _mapper.Map<EntryDTO>(entry);
+
+                return CreatedAtRoute("GetEntry", new { id = entry.Id }, _response);
             }
-            Entry updatedEntry = existingEntry with
+            catch (Exception ex)
             {
-                Description = entryDto.Description,
-                Project = entryDto.Project,
-                Manager = entryDto.Manager,
-                Worker = entryDto.Worker,
-            };
-            await repository.UpdateEntryAsync(updatedEntry);
-
-            return NoContent();
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
         }
 
-        // DELETE /entry/{id}
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteEntryAsync(Guid id)
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [HttpDelete("{id:guid}", Name = "DeleteEntry")]
+        public async Task<ActionResult<APIResponse>> DeleteEntry(Guid id)
         {
-            var existingEntry = await repository.GetEntryAsync(id);
-            if (existingEntry is null)
+            try
             {
-                return NotFound();
+
+                var Entry = await _dbEntry.GetAsync(u => u.Id == id);
+                if (Entry == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+                await _dbEntry.RemoveAsync(Entry);
+
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
             }
-            await repository.DeleteEntryAsync(id);
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
+        }
 
-            return NoContent();
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [HttpPut("{id:guid}", Name = "UpdateEntry")]
+        public async Task<ActionResult<APIResponse>> UpdateEntry(Guid id, [FromBody] UpdateEntryDTO updateDTO)
+        {
+            try
+            {
 
+                if (updateDTO == null || id != updateDTO.Id)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+                Entry model = _mapper.Map<Entry>(updateDTO);
+
+                await _dbEntry.UpdateAsync(model);
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
+        }
+
+        [HttpPatch("{id:guid}", Name = "UpdatePartialEntry")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<APIResponse>> UpdatePartialEntry(Guid id, JsonPatchDocument<UpdateEntryDTO> patchDTO)
+        {
+            try
+            {
+
+                var entry = await _dbEntry.GetAsync(u => u.Id == id, false);
+
+                if (entry is null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+                UpdateEntryDTO EntryDTO = _mapper.Map<UpdateEntryDTO>(entry);
+
+                patchDTO.ApplyTo(EntryDTO, ModelState);
+
+                Entry model = _mapper.Map<Entry>(EntryDTO);
+                model.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
+
+                await _dbEntry.UpdateAsync(model);
+
+                if (!ModelState.IsValid)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+                _response.StatusCode = HttpStatusCode.NoContent;
+                _response.IsSuccess = true;
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
         }
 
     }
