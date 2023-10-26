@@ -1,10 +1,20 @@
-namespace EventsLogger.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Project
+namespace EventsLogger.Entities
 {
-    public string? Name { get; set; }
-    public string? Address { get; set; }
-    public DateTime? Start { get; set; }
-    public string[]? Users { get; set; }
-    public string[]? Entries { get; set; }
+    public class Project
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public required string Name { get; set; }
+        //public required Address Address { get; set; }
+        public required string Address { get; set; }
+        public DateOnly CreatedDate { get; set; }
+        public DateOnly UpdatedDate { get; set; }
+        [ForeignKey("Users")]
+        public Guid[]? UserIds { get; init; }
+        public required User[] Users { get; init; }
+    }
 }

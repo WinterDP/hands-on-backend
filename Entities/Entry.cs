@@ -1,14 +1,22 @@
-namespace EventsLogger.Entities;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Entry
+namespace EventsLogger.Entities
 {
-    public Guid Id { get; init; }
-    public DateTime CreatedDate { get; init; }
-    public String? Description { get; init; }
-    public String? Project { get; init; }
-    public String? Manager { get; init; }
-    public String? Worker { get; init; }
-    public Boolean HasOwnerSeen { get; init; }
-    public Boolean HasManagerSeen { get; init; }
-    public String[]? Files { get; init; }
+    public class Entry
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
+        public DateOnly CreatedDate { get; set; }
+        public DateOnly UpdatedDate { get; set; }
+        public string? Description { get; init; }
+        [ForeignKey("Worker")]
+        public Guid WorkerId { get; init; }
+        [ForeignKey("Project")]
+        public Guid ProjectId { get; init; }
+        public required User Worker { get; init; }
+        public required Project Project { get; init; }
+        public string[]? Files { get; init; }
+    }
 }
