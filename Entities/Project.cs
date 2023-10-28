@@ -6,15 +6,18 @@ namespace EventsLogger.Entities
     public class Project
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        //public required Address Address { get; set; }
-        public required string Address { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? ZipCode { get; set; }
+        public string? Country { get; set; }
         public DateOnly CreatedDate { get; set; }
         public DateOnly UpdatedDate { get; set; }
-        [ForeignKey("Users")]
-        public Guid[]? UserIds { get; init; }
-        public required User[] Users { get; init; }
+
+        [ForeignKey("Owner")]
+        public Guid OwnerId { get; init; }
+        public User? Owner { get; init; }
     }
 }

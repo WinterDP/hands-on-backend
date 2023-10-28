@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using EventsLogger.Dto.Entry;
 using EventsLogger.Dto.Project;
+using EventsLogger.Dto.RelationshipProjectUser;
+using EventsLogger.Dto.RelationshipUserEntryProject;
 using EventsLogger.Dto.User;
 using EventsLogger.Entities;
 
@@ -21,6 +23,15 @@ namespace EventsLogger
             CreateMap<Entry, EntryDTO>().ReverseMap();
             CreateMap<Entry, CreateEntryDTO>().ReverseMap();
             CreateMap<Entry, UpdateEntryDTO>().ReverseMap();
+
+
+            CreateMap<RelationshipProjectUsers, RelationshipProjectUsersDTO>().ReverseMap();
+            CreateMap<RelationshipProjectUsers, CreateRelationshipProjectUsersDTO>().ReverseMap();
+            CreateMap<RelationshipProjectUsers, UpdateRelationshipProjectUsersDTO>().ReverseMap();
+            
+            CreateMap<RelationshipUserEntryProject, RelationshipUserEntryProjectDTO>().ReverseMap();
+            CreateMap<RelationshipUserEntryProject, CreateRelationshipUserEntryProjectDTO>().ReverseMap();
+            CreateMap<RelationshipUserEntryProject, UpdateRelationshipUserEntryProjectDTO>().ReverseMap();
 
         }
     }

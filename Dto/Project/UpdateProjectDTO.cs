@@ -5,11 +5,12 @@ namespace EventsLogger.Dto.Project
     public class UpdateProjectDTO
     {
         public Guid Id { get; set; }
-        public required string Name { get; set; }
-        //public required Address Address { get; set; }
-        public required string Address { get; set; }
+        public string? Name { get; set; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? ZipCode { get; set; }
+        public string? Country { get; set; }
         public DateOnly UpdatedDate { get; set; }
-        public Guid[]? UserIds { get; init; }
-
     }
 }

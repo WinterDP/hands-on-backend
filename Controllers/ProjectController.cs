@@ -1,5 +1,6 @@
 using AutoMapper;
 using EventsLogger.Dto.Project;
+using EventsLogger.Dto.RelationshipProjectUser;
 using EventsLogger.Entities;
 using EventsLogger.Repositories.IRepository;
 using Microsoft.AspNetCore.JsonPatch;
@@ -15,13 +16,15 @@ namespace EventsLogger.Controllers
     {
         private readonly APIResponse _response;
         private readonly IProjectRepository _dbProject;
+        private readonly IRelationshipProjectUserRepository _dbRelationship;
         private readonly IMapper _mapper;
 
-        public ProjectAPIController(IProjectRepository dbProject, IMapper mapper)
+        public ProjectAPIController(IProjectRepository dbProject, IMapper mapper, IRelationshipProjectUserRepository dbRelationship)
         {
             _mapper = mapper;
             _dbProject = dbProject;
             _response = new();
+            _dbRelationship = dbRelationship;
         }
 
 
@@ -45,6 +48,36 @@ namespace EventsLogger.Controllers
             return _response;
         }
 
+        [HttpPost("AddUser/{id:guid}", Name = "AddUser")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<APIResponse>> AddUser(Guid id, [FromBody] CreateRelationshipProjectUsersDTO createRelationshipProjectUserDTO)
+        {
+            try
+            {
+                var project = await _dbProject.GetAsync(u => u.Id == id);
+                if (project == null)
+                {
+                    _response.StatusCode = HttpStatusCode.NotFound;
+                    return NotFound(_response);
+                }
+                RelationshipProjectUsers relationship = _mapper.Map<RelationshipProjectUsers>(createRelationshipProjectUserDTO);
+                await _dbRelationship.CreateAsync(relationship);
+
+                _response.StatusCode = HttpStatusCode.Created;
+                _response.Result = _mapper.Map<RelationshipProjectUsersDTO>(relationship);
+
+                return Ok(_response);
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string> { ex.ToString() };
+            }
+            return _response;
+        }
+
+
 
 
         [HttpGet("{id:guid}", Name = "GetProject")]
@@ -55,14 +88,14 @@ namespace EventsLogger.Controllers
         {
             try
             {
-                var Project = await _dbProject.GetAsync(u => u.Id == id);
-                if (Project == null)
+                var project = await _dbProject.GetAsync(u => u.Id == id);
+                if (project == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
                     return NotFound(_response);
                 }
                 _response.StatusCode = HttpStatusCode.OK;
-                _response.Result = _mapper.Map<ProjectDTO>(Project);
+                _response.Result = _mapper.Map<ProjectDTO>(project);
                 return Ok(_response);
             }
             catch (Exception ex)
