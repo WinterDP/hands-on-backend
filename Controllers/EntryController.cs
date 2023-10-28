@@ -87,20 +87,6 @@ namespace EventsLogger.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
-                if (await _dbEntry.GetAsync(u => u.Id == createEntryDTO.WorkerId) != null)
-                {
-                    ModelState.AddModelError("CustomError", "User ID is Invalid!");
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.Result = ModelState;
-                    return BadRequest(_response);
-                }
-                if (await _dbEntry.GetAsync(u => u.Id == createEntryDTO.ProjectId) != null)
-                {
-                    ModelState.AddModelError("CustomError", "Project ID is Invalid!");
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    _response.Result = ModelState;
-                    return BadRequest(_response);
-                }
                 Entry entry = _mapper.Map<Entry>(createEntryDTO);
 
                 await _dbEntry.CreateAsync(entry);

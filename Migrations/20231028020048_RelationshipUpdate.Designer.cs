@@ -3,6 +3,7 @@ using System;
 using EventsLogger.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventsLogger.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231028020048_RelationshipUpdate")]
+    partial class RelationshipUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,15 +97,9 @@ namespace EventsLogger.Migrations
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateOnly>("CreatedDate")
-                        .HasColumnType("date");
-
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<DateOnly>("UpdatedDate")
-                        .HasColumnType("date");
 
                     b.HasKey("UserId", "ProjectId");
 
@@ -121,12 +118,6 @@ namespace EventsLogger.Migrations
 
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
-
-                    b.Property<DateOnly>("CreatedDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("UpdatedDate")
-                        .HasColumnType("date");
 
                     b.HasKey("EntryId", "UserId", "ProjectId");
 
@@ -174,7 +165,7 @@ namespace EventsLogger.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("50ef2fb9-5068-4340-a6e0-5856a54fa98d"),
+                            Id = new Guid("52fd93f6-98f7-471c-a1ad-d94ffd4b2554"),
                             CreatedDate = new DateOnly(1, 1, 1),
                             Email = "admin@admin.com",
                             Name = "admin",
