@@ -7,8 +7,12 @@ namespace EventsLogger.Dto.Project
         public Guid Id { get; init; }
         public DateOnly CreatedDate { get; set; }
         public required string Name { get; set; }
-        public required string Address { get; set; }
-        public Guid[]? UserIds { get; init; }
+        public required Guid OwnerId { get; init; }
+        public string? Street { get; set; }
+        public string? City { get; set; }
+        public string? State { get; set; }
+        public string? ZipCode { get; set; }
+        public string? Country { get; set; }
 
     }
 }

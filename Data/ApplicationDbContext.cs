@@ -11,11 +11,21 @@ namespace EventsLogger.Data
         public DbSet<Entry> Entries { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<RelationshipProjectUsers> RelationshipProjectUsers { get; set; }
+        public DbSet<RelationshipUserEntryProject> RelationshipUserEntryProject { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<RelationshipUserEntryProject>().HasKey(
+                r => new { r.EntryId , r.UserId, r.ProjectId}
+                );
+            modelBuilder.Entity<RelationshipProjectUsers>().HasKey(
+                r => new { r.UserId, r.ProjectId }
+                );
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
