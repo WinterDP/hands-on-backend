@@ -6,7 +6,6 @@ namespace EventsLogger.Entities
     public class Entry
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public DateOnly CreatedDate { get; set; }
         public DateOnly UpdatedDate { get; set; }
