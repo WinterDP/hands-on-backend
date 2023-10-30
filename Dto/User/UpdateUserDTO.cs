@@ -8,7 +8,7 @@
         public required string Password { get; set; }
         public required string PhotoPath { get; set; }
         public Guid? OwnerId { get; init; }
-        public DateOnly UpdatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
 
     }
 }

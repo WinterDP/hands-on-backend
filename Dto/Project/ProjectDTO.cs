@@ -3,8 +3,8 @@
     public class ProjectDTO
     {
         public Guid Id { get; init; }
-        public DateOnly CreatedDate { get; set; }
-        public DateOnly UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
         public required string Name { get; set; }
         public string? Street { get; set; }
         public string? City { get; set; }
