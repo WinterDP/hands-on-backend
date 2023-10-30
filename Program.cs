@@ -16,8 +16,24 @@ builder.Services.AddDbContext<ApplicationDbContext>(option =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IEntryRepository, EntryRepository>();
-builder.Services.AddScoped< IRelationshipProjectUserRepository , RelationshipProjectUserRepository>();
+builder.Services.AddScoped<IRelationshipProjectUserRepository, RelationshipProjectUserRepository>();
 builder.Services.AddScoped<IRelationshipUserEntryProjectRepository, RelationshipUserEntryProjectRepository>();
+
+// CORS frontEnd
+
+var MyAllowSpecificOrigins = "_allowFrontendAccess";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
 
 
 builder.Services.AddAutoMapper(typeof(MappingConfig));
@@ -33,7 +49,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers(options =>
 {
     options.SuppressAsyncSuffixInActionNames = false;
-});
+}).AddNewtonsoftJson();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +60,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(MyAllowSpecificOrigins);
 
 app.UseAuthorization();
 
