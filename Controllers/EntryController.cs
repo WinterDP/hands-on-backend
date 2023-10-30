@@ -182,7 +182,7 @@ namespace EventsLogger.Controllers
                 patchDTO.ApplyTo(EntryDTO, ModelState);
 
                 Entry model = _mapper.Map<Entry>(EntryDTO);
-                model.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
+                model.UpdatedDate = DateTime.Now;
 
                 await _dbEntry.UpdateAsync(model);
 

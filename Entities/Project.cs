@@ -8,16 +8,15 @@ namespace EventsLogger.Entities
         [Key]
         public Guid Id { get; set; }
         public required string Name { get; set; }
-        public string? Street { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? ZipCode { get; set; }
-        public string? Country { get; set; }
-        public DateOnly CreatedDate { get; set; }
-        public DateOnly UpdatedDate { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime UpdatedDate { get; set; }
+        [ForeignKey("Address")]
+        public Guid AddressId { get; init; }
+        public Address? Address { get; init; }
 
-        [ForeignKey("Owner")]
-        public Guid OwnerId { get; init; }
-        public User? Owner { get; init; }
+        // relationship with the project
+        [ForeignKey("Creator")]
+        public Guid CreatorId { get; init; }
+        public Project? Creator { get; init; }
     }
 }

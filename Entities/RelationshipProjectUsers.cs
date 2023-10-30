@@ -19,7 +19,5 @@ namespace EventsLogger.Entities
         public User? User { get; init; }
         public required string Role { get; set; }
 
-        public DateOnly CreatedDate { get; set; }
-        public DateOnly UpdatedDate { get; set; }
     }
 }

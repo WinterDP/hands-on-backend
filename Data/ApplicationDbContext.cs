@@ -11,6 +11,7 @@ namespace EventsLogger.Data
         public DbSet<Entry> Entries { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Project> Projects { get; set; }
+        public DbSet<Address> Address { get; set; }
         public DbSet<RelationshipProjectUsers> RelationshipProjectUsers { get; set; }
         public DbSet<RelationshipUserEntryProject> RelationshipUserEntryProject { get; set; }
 

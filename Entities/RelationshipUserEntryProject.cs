@@ -23,7 +23,5 @@ namespace EventsLogger.Entities
         public Guid? EntryId { get; init; }
         public Entry? Entry { get; init; }
 
-        public DateOnly CreatedDate { get; set; }
-        public DateOnly UpdatedDate { get; set; }
     }
 }
