@@ -90,7 +90,7 @@ namespace EventsLogger.Controllers
                 User user = _mapper.Map<User>(createUserDTO);
 
                 // Default Parameters
-                user.CreatedDate = DateTime.Now;
+                user.CreatedDate = DateTime.UtcNow;
                 user.Role = "worker";
 
                 await _dbUser.CreateAsync(user);

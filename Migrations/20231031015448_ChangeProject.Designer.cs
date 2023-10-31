@@ -3,6 +3,7 @@ using System;
 using EventsLogger.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventsLogger.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231031015448_ChangeProject")]
+    partial class ChangeProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,7 +181,7 @@ namespace EventsLogger.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("4b91ca26-90d5-41ad-b774-e44121356c22"),
+                            Id = new Guid("1cb729a6-f3da-48ec-aec4-7909c43a4665"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             Name = "admin",
@@ -202,7 +205,7 @@ namespace EventsLogger.Migrations
 
             modelBuilder.Entity("EventsLogger.Entities.Project", b =>
                 {
-                    b.HasOne("EventsLogger.Entities.User", "Creator")
+                    b.HasOne("EventsLogger.Entities.Project", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)

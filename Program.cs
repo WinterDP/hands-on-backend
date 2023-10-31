@@ -18,6 +18,8 @@ builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IEntryRepository, EntryRepository>();
 builder.Services.AddScoped<IRelationshipProjectUserRepository, RelationshipProjectUserRepository>();
 builder.Services.AddScoped<IRelationshipUserEntryProjectRepository, RelationshipUserEntryProjectRepository>();
+builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+
 
 // CORS frontEnd
 
