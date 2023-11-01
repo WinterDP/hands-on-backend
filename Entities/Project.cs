@@ -12,11 +12,11 @@ namespace EventsLogger.Entities
         public DateTime UpdatedDate { get; set; }
 
         [ForeignKey("Address")]
-        public Guid AddressId { get; init; }
-        public Address? Address { get; init; }
+        public Guid AddressId { get; set; }
+        public required Address Address { get; set; }
 
         [ForeignKey("Creator")]
-        public Guid CreatorId { get; init; }
-        public User? Creator { get; init; }
+        public Guid CreatorId { get; set; }
+        public User? Creator { get; set; }
     }
 }

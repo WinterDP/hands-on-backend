@@ -3,7 +3,6 @@ using EventsLogger.Dto.Address;
 using EventsLogger.Dto.Project;
 using EventsLogger.Dto.RelationshipProjectUser;
 using EventsLogger.Entities;
-using EventsLogger.Maps;
 using EventsLogger.Repositories.IRepository;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +40,7 @@ namespace EventsLogger.Controllers
         {
             try
             {
-                IEnumerable<Project> ProjectList = await _dbProject.GetAllAsync();
+                IEnumerable<Project> ProjectList = await _dbProject.GetAllAsync(includeProperties: "Address");
 
                 _response.Result = _mapper.Map<List<ProjectDTO>>(ProjectList);
                 _response.StatusCode = HttpStatusCode.OK;
@@ -50,7 +49,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -62,7 +61,7 @@ namespace EventsLogger.Controllers
         {
             try
             {
-                var project = await _dbProject.GetAsync(u => u.Id == id);
+                var project = await _dbProject.GetAsync(u => u.Id == id, includeProperties: "Address");
                 if (project == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
@@ -79,7 +78,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -133,7 +132,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -153,8 +152,7 @@ namespace EventsLogger.Controllers
                     return BadRequest(_response);
                 }
 
-                var user = await _dbUser.GetAsync(u => u.Id == createProjectDTO.CreatorId);
-
+                // TODO refactor the DTO mapping
 
                 Address address = new()
                 {
@@ -167,15 +165,23 @@ namespace EventsLogger.Controllers
                 };
                 await _dbAddress.CreateAsync(address);
 
+                var user = await _dbUser.GetAsync(u => u.Id == createProjectDTO.CreatorId);
+                if (user is null)
+                {
+                    _response.Messages!.Add("Invalid User");
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    return BadRequest(_response);
+                }
+
 
                 Project project = new()
                 {
                     Id = Guid.NewGuid(),
                     Name = createProjectDTO.Name,
                     CreatedDate = DateTime.UtcNow,
-                    CreatorId = user.Id,
                     Address = address,
                     AddressId = address.Id,
+                    CreatorId = user.Id,
                     Creator = user,
                 };
                 await _dbProject.CreateAsync(project);
@@ -204,6 +210,7 @@ namespace EventsLogger.Controllers
 
 
                 _response.StatusCode = HttpStatusCode.Created;
+                _response.Messages.Add("The Project was created with success");
                 _response.Result = projectDTO;
 
                 return CreatedAtRoute("GetProject", new { id = project.Id }, _response);
@@ -211,7 +218,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -226,53 +233,33 @@ namespace EventsLogger.Controllers
             try
             {
 
-                var Project = await _dbProject.GetAsync(u => u.Id == id);
-                if (Project == null)
+                var project = await _dbProject.GetAsync(u => u.Id == id);
+                if (project == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
+                    _response.IsSuccess = false;
+                    _response.Messages!.Add("The project with ID was not found");
                     return NotFound(_response);
                 }
-                await _dbProject.RemoveAsync(Project);
+                // remove address
+                project.Address = await _dbAddress.GetAsync(u => u.Id == project.AddressId, false);
+                //await _dbAddress.RemoveAsync(project.Address);
+                await _dbProject.RemoveAsync(project);
 
                 _response.StatusCode = HttpStatusCode.NoContent;
+                _response.Messages!.Add("The Project was deleted");
                 _response.IsSuccess = true;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
 
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpPut("{id:guid}", Name = "UpdateProject")]
-        public async Task<ActionResult<APIResponse>> UpdateProject(Guid id, [FromBody] UpdateProjectDTO updateDTO)
-        {
-            try
-            {
-
-                if (updateDTO == null || id != updateDTO.Id)
-                {
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                    return BadRequest(_response);
-                }
-                Project project = _mapper.Map<Project>(updateDTO);
-
-                await _dbProject.UpdateAsync(project);
-                _response.StatusCode = HttpStatusCode.NoContent;
-                _response.IsSuccess = true;
-                return Ok(_response);
-            }
-            catch (Exception ex)
-            {
-                _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
-            }
-            return _response;
-        }
 
         [HttpPatch("{id:guid}", Name = "UpdatePartialProject")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -282,34 +269,68 @@ namespace EventsLogger.Controllers
             try
             {
 
-                var project = await _dbProject.GetAsync(u => u.Id == id, false);
-
-                if (project is null)
+                if (id == Guid.Empty)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.Messages!.Add("The Id is invalid");
+                    _response.IsSuccess = false;
                     return BadRequest(_response);
                 }
+                var project = await _dbProject.GetAsync(u => u.Id == id, false);
+
+                if (project == null)
+                {
+                    _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.Messages!.Add("The project doesn't exists");
+                    _response.IsSuccess = false;
+                    return BadRequest(_response);
+                }
+
                 UpdateProjectDTO projectDTO = _mapper.Map<UpdateProjectDTO>(project);
 
                 patchDTO.ApplyTo(projectDTO, ModelState);
 
                 Project model = _mapper.Map<Project>(projectDTO);
 
-                await _dbProject.UpdateAsync(model);
+
+
+                if (patchDTO.Operations[0].path == "/address")
+                {
+                    Address address = new()
+                    {
+                        Id = model.AddressId,
+                        State = model.Address.State,
+                        Street = model.Address.Street,
+                        City = model.Address.City,
+                        ZipCode = model.Address.ZipCode,
+                        Country = model.Address.Country,
+                    };
+                    await _dbAddress.UpdateAsync(address);
+
+                }
+                else
+                {
+                    model.Address = await _dbAddress.GetAsync(u => u.Id == model.AddressId, false);
+                    await _dbProject.UpdateAsync(model);
+                }
+
 
                 if (!ModelState.IsValid)
                 {
                     _response.StatusCode = HttpStatusCode.BadRequest;
+                    _response.IsSuccess = false;
                     return BadRequest(_response);
                 }
                 _response.StatusCode = HttpStatusCode.NoContent;
+                _response.Messages!.Add("The patch was applied with success");
                 _response.IsSuccess = true;
                 return Ok(_response);
             }
             catch (Exception ex)
             {
+                _response.StatusCode = HttpStatusCode.InternalServerError;
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
