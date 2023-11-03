@@ -14,7 +14,6 @@ namespace EventsLogger.Repositories
 
         public async Task UpdateAsync(RelationshipUserEntryProject entity)
         {
-            entity.UpdatedDate = DateOnly.FromDateTime(DateTime.Now);
             _db.RelationshipUserEntryProject.Update(entity);
             await _db.SaveChangesAsync();
         }

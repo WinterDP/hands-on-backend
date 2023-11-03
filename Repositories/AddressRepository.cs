@@ -4,19 +4,18 @@ using EventsLogger.Repositories.IRepository;
 
 namespace EventsLogger.Repositories
 {
-    public class ProjectRepository : Repository<Project>, IProjectRepository
+    public class AddressRepository : Repository<Address>, IAddressRepository
     {
         private readonly ApplicationDbContext _db;
-        public ProjectRepository(ApplicationDbContext db) : base(db)
+        public AddressRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
         }
-
-        public async Task UpdateAsync(Project entity)
+        public async Task UpdateAsync(Address entity)
         {
-            entity.UpdatedDate = DateTime.UtcNow;
-            _db.Projects.Update(entity);
+            _db.Address.Update(entity);
             await _db.SaveChangesAsync();
         }
     }
 }
+

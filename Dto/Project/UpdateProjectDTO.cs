@@ -1,4 +1,4 @@
-﻿using EventsLogger.Entities;
+﻿using EventsLogger.Dto.Address;
 
 namespace EventsLogger.Dto.Project
 {
@@ -6,11 +6,10 @@ namespace EventsLogger.Dto.Project
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }
-        public string? Street { get; set; }
-        public string? City { get; set; }
-        public string? State { get; set; }
-        public string? ZipCode { get; set; }
-        public string? Country { get; set; }
-        public DateOnly UpdatedDate { get; set; }
+        public Guid AddressId { get; init; }
+        public UpdateAddressDTO? Address { get; set; }
+        public Guid? CreatorId { get; init; }
+        public DateTime UpdatedDate { get; set; }
+
     }
 }

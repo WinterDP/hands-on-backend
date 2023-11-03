@@ -3,6 +3,7 @@ using System;
 using EventsLogger.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventsLogger.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231030021224_Init")]
+    partial class Init
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +37,9 @@ namespace EventsLogger.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("State")
                         .HasColumnType("text");
 
@@ -44,6 +50,8 @@ namespace EventsLogger.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Address");
                 });
@@ -110,9 +118,15 @@ namespace EventsLogger.Migrations
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("UserId", "ProjectId");
 
@@ -131,6 +145,12 @@ namespace EventsLogger.Migrations
 
                     b.Property<Guid?>("ProjectId")
                         .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("EntryId", "UserId", "ProjectId");
 
@@ -178,7 +198,7 @@ namespace EventsLogger.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("deb80049-0572-4713-bc3f-6cf4a999f421"),
+                            Id = new Guid("88a56d69-1f10-4bf8-ad03-a6814877e461"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             Name = "admin",
@@ -189,6 +209,17 @@ namespace EventsLogger.Migrations
                         });
                 });
 
+            modelBuilder.Entity("EventsLogger.Entities.Address", b =>
+                {
+                    b.HasOne("EventsLogger.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("EventsLogger.Entities.Project", b =>
                 {
                     b.HasOne("EventsLogger.Entities.Address", "Address")
@@ -197,7 +228,7 @@ namespace EventsLogger.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("EventsLogger.Entities.User", "Creator")
+                    b.HasOne("EventsLogger.Entities.Project", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)

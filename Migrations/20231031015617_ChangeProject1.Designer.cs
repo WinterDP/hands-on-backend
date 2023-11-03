@@ -3,6 +3,7 @@ using System;
 using EventsLogger.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventsLogger.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231031015617_ChangeProject1")]
+    partial class ChangeProject1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,6 +37,9 @@ namespace EventsLogger.Migrations
                     b.Property<string>("Country")
                         .HasColumnType("text");
 
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("State")
                         .HasColumnType("text");
 
@@ -44,6 +50,8 @@ namespace EventsLogger.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Address");
                 });
@@ -77,9 +85,6 @@ namespace EventsLogger.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("AddressId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -94,8 +99,6 @@ namespace EventsLogger.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressId");
 
                     b.HasIndex("CreatorId");
 
@@ -178,7 +181,7 @@ namespace EventsLogger.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("deb80049-0572-4713-bc3f-6cf4a999f421"),
+                            Id = new Guid("4b91ca26-90d5-41ad-b774-e44121356c22"),
                             CreatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com",
                             Name = "admin",
@@ -189,21 +192,24 @@ namespace EventsLogger.Migrations
                         });
                 });
 
-            modelBuilder.Entity("EventsLogger.Entities.Project", b =>
+            modelBuilder.Entity("EventsLogger.Entities.Address", b =>
                 {
-                    b.HasOne("EventsLogger.Entities.Address", "Address")
+                    b.HasOne("EventsLogger.Entities.Project", "Project")
                         .WithMany()
-                        .HasForeignKey("AddressId")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Project");
+                });
+
+            modelBuilder.Entity("EventsLogger.Entities.Project", b =>
+                {
                     b.HasOne("EventsLogger.Entities.User", "Creator")
                         .WithMany()
                         .HasForeignKey("CreatorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Address");
 
                     b.Navigation("Creator");
                 });

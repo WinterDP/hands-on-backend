@@ -40,7 +40,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -68,7 +68,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -90,7 +90,7 @@ namespace EventsLogger.Controllers
                 User user = _mapper.Map<User>(createUserDTO);
 
                 // Default Parameters
-                user.CreatedDate = DateOnly.FromDateTime(DateTime.Now);
+                user.CreatedDate = DateTime.UtcNow;
                 user.Role = "worker";
 
                 await _dbUser.CreateAsync(user);
@@ -103,7 +103,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -133,7 +133,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -161,7 +161,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -201,7 +201,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
