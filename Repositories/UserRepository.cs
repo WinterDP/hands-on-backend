@@ -13,7 +13,7 @@ namespace EventsLogger.Repositories
         }
         public async Task UpdateAsync(User entity)
         {
-            entity.UpdatedDate = DateTime.Now;
+            entity.UpdatedDate = DateTime.UtcNow;
             _db.Users.Update(entity);
             await _db.SaveChangesAsync();
         }

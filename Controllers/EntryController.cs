@@ -40,7 +40,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -68,7 +68,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -99,7 +99,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -129,7 +129,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -157,7 +157,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }
@@ -182,7 +182,7 @@ namespace EventsLogger.Controllers
                 patchDTO.ApplyTo(EntryDTO, ModelState);
 
                 Entry model = _mapper.Map<Entry>(EntryDTO);
-                model.UpdatedDate = DateTime.Now;
+                model.UpdatedDate = DateTime.UtcNow;
 
                 await _dbEntry.UpdateAsync(model);
 
@@ -198,7 +198,7 @@ namespace EventsLogger.Controllers
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.ErrorMessages = new List<string> { ex.ToString() };
+                _response.Messages = new List<string> { ex.ToString() };
             }
             return _response;
         }

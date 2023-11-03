@@ -10,13 +10,13 @@ namespace EventsLogger.Entities
         public required string Name { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
-        [ForeignKey("Address")]
-        public Guid AddressId { get; init; }
-        public Address? Address { get; init; }
 
-        // relationship with the project
+        [ForeignKey("Address")]
+        public Guid AddressId { get; set; }
+        public required Address Address { get; set; }
+
         [ForeignKey("Creator")]
-        public Guid CreatorId { get; init; }
-        public Project? Creator { get; init; }
+        public Guid CreatorId { get; set; }
+        public User? Creator { get; set; }
     }
 }
